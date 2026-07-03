@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>תיק קליטה רשמי ומלא - נוף הגליל</title>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 15px; color: #333; }
+    .form-container { max-width: 680px; background: white; margin: 0 auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #1a365d; margin-bottom: 5px; font-size: 24px; }
+    .sub-title { text-align: center; color: #4a5568; margin-bottom: 30px; font-size: 14px; font-weight: bold; }
+    .section-title { font-weight: bold; color: #2b6cb0; margin-top: 30px; margin-bottom: 15px; background: #ebf8ff; padding: 10px 15px; border-radius: 4px; border-right: 5px solid #2b6cb0; font-size: 16px; }
+    .form-group { margin-bottom: 15px; }
+    .form-row { display: flex; gap: 15px; }
+    .form-row .form-group { flex: 1; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #2d3748; }
+    input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; font-size: 15px; background-color: #fff; }
+    textarea { height: 60px; resize: none; }
+    .radio-group { margin: 8px 0; display: flex; gap: 20px; }
+    .radio-label { display: flex; align-items: center; font-weight: normal; cursor: pointer; }
+    .radio-label input { margin-left: 6px; }
+    .legal-text { font-size: 13px; color: #4a5568; background: #f7fafc; padding: 12px; border-radius: 4px; border: 1px solid #e2e8f0; line-height: 1.6; margin-bottom: 12px; text-align: justify; }
+    
+    .signature-block { margin-top: 20px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px; background: #fff; }
+    .signature-container { border: 2px dashed #cbd5e0; background: #fff; border-radius: 4px; position: relative; margin-top: 5px; }
+    canvas { width: 100%; height: 130px; display: block; cursor: crosshair; }
+    .clear-btn { background: #e53e3e; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+    .hidden-block { display: none; }
+    .dynamic-name { color: #2b6cb0; font-weight: bold; }
+    
+    .submit-btn { width: 100%; background: #2b6cb0; color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 35px; transition: 0.2s; box-shadow: 0 4px 6px rgba(50,50,93,0.11); }
+    .submit-btn:hover { background: #2c5282; }
+    #statusMessage { text-align: center; font-weight: bold; margin-top: 15px; font-size: 16px; }
+    @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>עיריית נוף הגליל</h2>
+  <div class="sub-title">מינהל חינוך, חברה וקהילה - תיק קליטה רשמי לקידום נוער</div>
+  
+  <form id="intakeForm" onsubmit="submitForm(event)">
+    
+    <div class="section-title">1. טופס ריכוז פרטים אישיים (הנער/ה)</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>שם פרטי:</label>
+        <input type="text" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label>שם משפחה:</label>
+        <input type="text" name="lastName" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>תעודת זהות:</label>
+        <input type="text" name="idNumber" required>
+      </div>
+      <div class="form-group">
+        <label>תאריך לידה:</label>
+        <input type="date" name="birthDate" required>
+      </div>
+      <div class="form-group">
+        <label>מין:</label>
+        <select name="gender" required>
+          <option value="">בחר...</option>
+          <option value="זכר">זכר</option>
+          <option value="נקבה">נקבה</option>
+          <option value="אחר">אחר</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>טלפון נייד נער/ה:</label>
+        <input type="text" name="phoneStudent" required>
+      </div>
+      <div class="form-group">
+        <label>ארץ לידה:</label>
+        <input type="text" name="birthCountry" placeholder="למשל: ישראל" required>
+      </div>
+      <div class="form-group">
+        <label>תאריך עלייה (אם רלוונטי):</label>
+        <input type="text" name="aliyahDate" placeholder="רשום שנה או 'לא רלוונטי'">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>מוסד לימודים אחרון בו למד:</label>
+        <input type="text" name="lastSchool" placeholder="שם בית הספר והיישוב" required>
+      </div>
+      <div class="form-group">
+        <label>כיתה אחרונה שסיים:</label>
+        <select name="lastClass" required>
+          <option value="">בחר כיתה...</option>
+          <option value="ח'">ח'</option>
+          <option value="ט'">ט'</option>
+          <option value="י'">י'</option>
+          <option value="י'א">י"א</option>
+          <option value="י'ב">י"ב</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>קופת חולים:</label>
+        <select name="healthFund" required>
+          <option value="">בחר קופה...</option>
+          <option value="כללית">כללית</option>
+          <option value="מכבי">מכבי</option>
+          <option value="מאוחדת">מאוחדת</option>
+          <option value="לאומית">לאומית</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>כתובת מרשם (לפי תעודת זהות):</label>
+      <input type="text" name="addressRegister" required>
+    </div>
+    <div class="form-group">
+      <label>כתובת הצהרה - בפועל (אם שונה מכתובת המרשם):</label>
+      <input type="text" name="addressActual" placeholder="השאר ריק אם זהה למרשם">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>מתגורר/ת עם:</label>
+        <select name="livingWith" required>
+          <option value="">בחר...</option>
+          <option value="שני ההורים">שני ההורים</option>
+          <option value="אמא">אמא</option>
+          <option value="אבא">אבא</option>
+          <option value="אחר">אחר / מסגרת חוץ ביתית</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>סוג אוכלוסייה לדיווח:</label>
+        <select name="populationType" required>
+          <option value="">בחר מהרשימה...</option>
+          <option value="ותיקים">ותיקים</option>
+          <option value="יוצאי חבר העמים">יוצאי חבר העמים</option>
+          <option value="יוצאי אתיופיה">יוצאי אתיופיה</option>
+          <option value="החברה הערבית">החברה הערבית</option>
+          <option value="חרדים / דתי לאומי">חרדים / דתי לאומי</option>
+          <option value="אחר">אחר</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>גורם מפנה ליחידה (בית ספר, קב"ס, רווחה, פנייה עצמית וכדומה):</label>
+      <input type="text" name="referredBy" required>
+    </div>
+
+    <div class="section-title">2. פרטי הורים / אפוטרופוס</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>שם מלא - הורה 1:</label>
+        <input type="text" id="parent1NameInput" name="parent1Name" oninput="updateSignaturesUI()" required>
+      </div>
+      <div class="form-group">
+        <label>טלפון - הורה 1:</label>
+        <input type="text" name="parent1Phone" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>שם מלא - הורה 2 (אופציונלי):</label>
+        <input type="text" id="parent2NameInput" name="parent2Name" oninput="updateSignaturesUI()">
+      </div>
+      <div class="form-group">
+        <label>טלפון - הורה 2 (אופציונלי):</label>
+        <input type="text" name="parent2Phone">
+      </div>
+    </div>
+
+    <div class="section-title">3. כתבי הסכמה ואישורי הורים</div>
+    <label>א. אישור יציאה מרוכזת להתנדבויות ופעילות חוץ:</label>
+    <div class="legal-text">הריני מאשר/ת לבני/בתי לצאת להתנדבות מחוץ ליחידה לקידום נוער וכן בימי פעילות וסיורים מרוכזים במהלך שנת הלימודים בליווי צוות חינוכי מוסמך.</div>
+    <div class="form-group">
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="volunteerAuth" value="מאשר/ת" required> מאשר/ת</label>
+        <label class="radio-label"><input type="radio" name="volunteerAuth" value="לא מאשר/ת"> לא מאשר/ת</label>
+      </div>
+    </div>
+
+    <label>ב. אישור לפרסום תמונות ומדיה באינטרנט:</label>
+    <div class="legal-text">הריני לאשר את הסכמתי לפרסום תמונות או סרטונים קבוצתיים של בני/בתי באתרי האינטרנט ובכל חומר פרסומי ותקשורתי רשמי מטעם היחידה לקידום נוער. ידוע לי כי המידע יהיה חשוף לכלל הגולשים.</div>
+    <div class="form-group">
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="mediaAuth" value="מאשר/ת לפרסם" required> מאשר/ת לפרסם</label>
+        <label class="radio-label"><input type="radio" name="mediaAuth" value="מסרב/ת לפרסם"> מסרב/ת לפרסם</label>
+      </div>
+    </div>
+
+    <div class="section-title">4. הצהרה מפורטת על מצב הבריאות ואבחונים</div>
+    <div class="form-group">
+      <label>האם קיים לנער/ה אבחון דידקטי / פסיכודידקטי בתוקף?</label>
+      <select name="hasDiagnosis" required>
+        <option value="">בחר תשובה...</option>
+        <option value="כן - קיים אבחון בתוקף">כן - קיים אבחון (יועבר עותק לצוות)</option>
+        <option value="לא - לא קיים אבחון">לא - לא קיים אבחון בתוקף</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>האם קיימות מגבלות המונעות מהנער/ה השתתפות מלאה או חלקית בפעילויות?</label>
+      <input type="text" name="healthLimits" placeholder="סמן או פרט: גופנית / טיולים / אתגרי או רשום 'אין מגבלות'" required>
+    </div>
+    <div class="form-group">
+      <label>במידה ויש מגבלה ספציפית, אנא תאר אותה (או רשום 'לא רלוונטי'):</label>
+      <textarea name="limitDetails" required>לא רלוונטי</textarea>
+    </div>
+    <div class="form-group">
+      <label>1. האם לנער/ה יש בעיה בריאותית כרונית (אסתמה, סוכרת נעורים, אפילפסיה וכד')?</label>
+      <input type="text" name="chronicDisease" placeholder="רשום פירוט מלא ומצרף אישור, או 'לא'" required>
+    </div>
+    <div class="form-group">
+      <label>2. האם בני/בתי נוטל/ת בהווה או נטל/ה בעבר ריטלין / קונצרטה / אטנט?</label>
+      <input type="text" name="ritalinCheck" placeholder="רשום פרטים/מינון, או 'לא'" required>
+    </div>
+    <div class="form-group">
+      <label>3. האם בני/בתי נוטל/ת תרופות אחרות כלשהן באופן קבוע?</label>
+      <input type="text" name="otherMeds" placeholder="פרט שם תרופה ומינון, או 'לא'" required>
+    </div>
+    <div class="form-group">
+      <label>4. האם בני/בתי סובל/ת מאלרגיות או רגישות חריפה למזון, עקיצות או תרופות?</label>
+      <input type="text" name="allergiesCheck" placeholder="רשום פירוט מלא ורגישויות, או 'לא'" required>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>5. לקות ראייה / משקפיים / עדשות:</label>
+        <input type="text" name="visionCheck" placeholder="רשום פרטים + תאריך בדיקה אחרונה, או 'אין'" required>
+      </div>
+      <div class="form-group">
+        <label>6. לקות שמיעה / מכשיר שמיעה:</label>
+        <input type="text" name="hearingCheck" placeholder="רשום פרטים + תאריך בדיקה אחרונה, או 'אין'" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>שם וטלפון של איש קשר לפנייה בשעת מצוקה בגין המצב הבריאותי:</label>
+      <input type="text" name="emergencyContact" placeholder="שם מלא + טלפון ישיר" required>
+    </div>
+
+    <div class="section-title">5. חוזה קליטה ראשוני ותיאום ציפיות הדדי</div>
+    <div class="legal-text">
+      אני נותן/ת בזאת את הסכמתי המלאה לקליטת בני/בתי ביחידה לקידום נוער נוף הגליל. הריני מצהיר/ה על הסכמתי לוותר על סודיות המידע ומאשר/ת בזאת העברת חומר רלוונטי על בני/בתי לגורמי טיפול מוסמכים ברשות, בתי ספר או כל מסגרת חינוכית משלימה רלוונטית לפי הצורך.
+    </div>
+    
+    <div class="signature-block">
+      <label>חתימת הורה 1 (<span id="lblParent1Name" class="dynamic-name">אנא מלא שם למעלה</span>):</label>
+      <div class="signature-container">
+        <canvas id="sig-pad-1"></canvas>
+      </div>
+      <button type="button" class="clear-btn" onclick="clearSig(1)">נקה חתימה</button>
+    </div>
+
+    <div class="signature-block hidden-block" id="blockParent2Signature">
+      <label>חתימת הורה 2 (<span id="lblParent2Name" class="dynamic-name"></span>):</label>
+      <div class="signature-container">
+        <canvas id="sig-pad-2"></canvas>
+      </div>
+      <button type="button" class="clear-btn" onclick="clearSig(2)">נקה חתימה</button>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">שלח ואשרר תיק קליטה מלא</button>
+  </form>
+  
+  <div id="statusMessage"></div>
+</div>
+
+<script>
+  // הקישור הרשמי של ה-Web App החדש שלך בגוגל
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv5bPDUCTunK1iAu6wP5Ir1tBE2WDGBthxi2MQIyNihFBpiJmcu7e8-MSmv-hKUehD/exec";
+
+  const canvas1 = document.getElementById('sig-pad-1');
+  const canvas2 = document.getElementById('sig-pad-2');
+  
+  const pad1 = new SignaturePad(canvas1, { backgroundColor: 'rgb(255, 255, 255)' });
+  const pad2 = new SignaturePad(canvas2, { backgroundColor: 'rgb(255, 255, 255)' });
+
+  function resizeCanvases() {
+    [ {c: canvas1, p: pad1}, {c: canvas2, p: pad2} ].forEach(item => {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      item.c.width = item.c.offsetWidth * ratio;
+      item.c.height = item.c.offsetHeight * ratio;
+      item.c.getContext("2d").scale(ratio, ratio);
+      item.p.clear();
+    });
+  }
+  window.addEventListener("resize", resizeCanvases);
+  setTimeout(resizeCanvases, 300);
+
+  function updateSignaturesUI() {
+    const name1 = document.getElementById('parent1NameInput').value;
+    const name2 = document.getElementById('parent2NameInput').value;
+    
+    document.getElementById('lblParent1Name').innerText = name1 ? name1 : "אנא מלא שם למעלה";
+    
+    const block2 = document.getElementById('blockParent2Signature');
+    if (name2 && name2.trim() !== "") {
+      if (block2.classList.contains('hidden-block')) {
+        block2.classList.remove('hidden-block');
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas2.width = canvas2.offsetWidth * ratio;
+        canvas2.height = canvas2.offsetHeight * ratio;
+        canvas2.getContext("2d").scale(ratio, ratio);
+        pad2.clear();
+      }
+      document.getElementById('lblParent2Name').innerText = name2;
+    } else {
+      block2.classList.add('hidden-block');
+      pad2.clear();
+    }
+  }
+
+  function clearSig(num) {
+    if (num === 1) pad1.clear();
+    if (num === 2) pad2.clear();
+  }
+
+  function submitForm(event) {
+    event.preventDefault();
+    
+    if (pad1.isEmpty()) {
+      alert("אנא חתום בתיבת החתימה של הורה 1.");
+      return;
+    }
+    
+    const name2 = document.getElementById('parent2NameInput').value;
+    if (name2 && name2.trim() !== "" && pad2.isEmpty()) {
+      alert("מילאת את פרטי הורה 2. אנא דאג שגם הורה 2 יחתום בתיבה המתאימה.");
+      return;
+    }
+    
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('statusMessage').style.color = "orange";
+    document.getElementById('statusMessage').innerText = "תיק הקליטה בבדיקה ומסתנכרן, אנא המתן...";
+
+    const formEl = document.getElementById('intakeForm');
+    const formData = new FormData(formEl);
+    
+    const payload = {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      idNumber: formData.get('idNumber'),
+      birthDate: formData.get('birthDate'),
+      gender: formData.get('gender'),
+      phoneStudent: formData.get('phoneStudent'),
+      birthCountry: formData.get('birthCountry'),
+      aliyahDate: formData.get('aliyahDate'),
+      lastSchool: formData.get('lastSchool'),
+      lastClass: formData.get('lastClass'),
+      healthFund: formData.get('healthFund'),
+      addressRegister: formData.get('addressRegister'),
+      addressActual: formData.get('addressActual'),
+      livingWith: formData.get('livingWith'),
+      populationType: formData.get('populationType'),
+      referredBy: formData.get('referredBy'),
+      parent1Name: formData.get('parent1Name'),
+      parent1Phone: formData.get('parent1Phone'),
+      parent2Name: formData.get('parent2Name'),
+      parent2Phone: formData.get('parent2Phone'),
+      volunteerAuth: formData.get('volunteerAuth'),
+      mediaAuth: formData.get('mediaAuth'),
+      hasDiagnosis: formData.get('hasDiagnosis'),
+      healthLimits: formData.get('healthLimits'),
+      limitDetails: formData.get('limitDetails'),
+      chronicDisease: formData.get('chronicDisease'),
+      ritalinCheck: formData.get('ritalinCheck'),
+      otherMeds: formData.get('otherMeds'),
+      allergiesCheck: formData.get('allergiesCheck'),
+      visionCheck: formData.get('visionCheck'),
+      hearingCheck: formData.get('hearingCheck'),
+      emergencyContact: formData.get('emergencyContact'),
+      signatureData1: pad1.toDataURL('image/jpeg'),
+      signatureData2: (!pad2.isEmpty()) ? pad2.toDataURL('image/jpeg') : ""
+    };
+    
+    // שימוש ב-Fetch API לשליחה חיצונית לשרת של גוגל
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // מאפשר שליחה חלקה ללא חסימות דפדפן
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      // מכיוון שאנו עובדים במצב no-cors, אנו מניחים הצלחה אם השליחה עברה ללא קריסה
+      document.getElementById('statusMessage').style.color = "green";
+      document.getElementById('statusMessage').innerText = "תיק הקליטה של " + payload.firstName + " נשלח וסונכרן בהצלחה למייל!";
+      formEl.reset();
+      pad1.clear();
+      pad2.clear();
+      updateSignaturesUI();
+      document.getElementById('submitBtn').disabled = false;
+    })
+    .catch(error => {
+      document.getElementById('statusMessage').style.color = "red";
+      document.getElementById('statusMessage').innerText = "שגיאה בשליחת הנתונים: " + error.message;
+      document.getElementById('submitBtn').disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
