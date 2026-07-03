@@ -377,7 +377,7 @@
       signatureData2: (!pad2.isEmpty()) ? pad2.toDataURL('image/jpeg') : ""
     };
     
-    // שינוי ל-text/plain פותר את בעיות חסימת ה-headers של הדפדפנים ב-no-cors
+    // שליחה בפורמט טקסט פשוט על מנת לעקוף חסימות אבטחה של דפדפנים בנייד
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors', 
