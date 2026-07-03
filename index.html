@@ -377,16 +377,15 @@
       signatureData2: (!pad2.isEmpty()) ? pad2.toDataURL('image/jpeg') : ""
     };
     
-    // שימוש ב-Fetch API לשליחה חיצונית לשרת של גוגל
+    // שינוי ל-text/plain פותר את בעיות חסימת ה-headers של הדפדפנים ב-no-cors
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // מאפשר שליחה חלקה ללא חסימות דפדפן
+      mode: 'no-cors', 
       cache: 'no-cache',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     })
     .then(response => {
-      // מכיוון שאנו עובדים במצב no-cors, אנו מניחים הצלחה אם השליחה עברה ללא קריסה
       document.getElementById('statusMessage').style.color = "green";
       document.getElementById('statusMessage').innerText = "תיק הקליטה של " + payload.firstName + " נשלח וסונכרן בהצלחה למייל!";
       formEl.reset();
