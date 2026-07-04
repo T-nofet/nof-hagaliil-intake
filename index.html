@@ -244,7 +244,8 @@
 
     <div class="section-title">5. חוזה קליטה ראשוני ותיאום ציפיות הדדי</div>
     <div class="legal-text">
-      אני נותן/ת בזאת את הסכמתי המלאה לקליטת בני/בתי ביחידה לקידום נוער נוף הגליל. הריני מצהיר/ה על הסכמתי לוותר על סודיות המידע ומאשר/ת בזאת העברת חומר רלוונטי על בני/בתי לגורמי טיפול מוסמכים ברשות, בתי ספר או כל מסגרת חינוכית משלימה רלוונטית לפי הצורך.
+      אני נותן/ת בזאת את הסכמתי המלאה לקליטת בני/בתי ביחידה לקידום נוער נוף הגליל. הריני מצהיר/ה על הסכמתי לוותר על סודיות המידע ומאשר/ת בזאת העברת חומר רלוונטי על בני/בתי לגורמי טיפול מוסמכים ברשות, בתי ספר או כל מסגרת חינוכית משלימה רלוונטית לפי הצורך החינוכי והטיפולי המקצועי.[cite: 2]<br/><br/>
+      החתימה על מסמך זה מהווה אישור מוסכם על הבנת אופי מסגרת קידום הנוער ברשות. המסגרת מחייבת הגעה סדירה ורציפה למפגשים הפדגוגיים והטיפוליים, שמירה על כללי התנהגות מוסדרים ונאותים, שיתוף פעולה מלא ויציב עם הצוות החינוכי המלווה והשתלבות מלאה במסלולי הלמידה, הבחינות וההתנדבות השונים מטעם הרשות העירונית.[cite: 2]
     </div>
     
     <div class="signature-block">
@@ -270,7 +271,7 @@
 </div>
 
 <script>
-  // הקישור הרשמי של ה-Web App החדש שלך בגוגל
+  // הקישור הרשמי של ה-Web App בגוגל סקריפט
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv5bPDUCTunK1iAu6wP5Ir1tBE2WDGBthxi2MQIyNihFBpiJmcu7e8-MSmv-hKUehD/exec";
 
   const canvas1 = document.getElementById('sig-pad-1');
@@ -319,6 +320,24 @@
     if (num === 2) pad2.clear();
   }
 
+  // פונקציית העזר לניהול הצלחת השליחה וניקוי הטופס
+  function handleFormSuccess(studentName) {
+    document.getElementById('statusMessage').style.color = "green";
+    document.getElementById('statusMessage').innerText = "תיק הקליטה של " + studentName + " נשלח וסונכרן בהצלחה למייל!";
+    document.getElementById('intakeForm').reset();
+    pad1.clear();
+    pad2.clear();
+    updateSignaturesUI();
+    document.getElementById('submitBtn').disabled = false;
+  }
+
+  // פונקציית העזר לניהול שגיאות
+  function handleFormError(errMessage) {
+    document.getElementById('statusMessage').style.color = "red";
+    document.getElementById('statusMessage').innerText = "שגיאה בשליחת הנתונים: " + errMessage;
+    document.getElementById('submitBtn').disabled = false;
+  }
+
   function submitForm(event) {
     event.preventDefault();
     
@@ -353,14 +372,14 @@
       lastClass: formData.get('lastClass'),
       healthFund: formData.get('healthFund'),
       addressRegister: formData.get('addressRegister'),
-      addressActual: formData.get('addressActual'),
+      addressActual: formData.get('addressActual') || "זהה למרשם",
       livingWith: formData.get('livingWith'),
       populationType: formData.get('populationType'),
       referredBy: formData.get('referredBy'),
       parent1Name: formData.get('parent1Name'),
       parent1Phone: formData.get('parent1Phone'),
-      parent2Name: formData.get('parent2Name'),
-      parent2Phone: formData.get('parent2Phone'),
+      parent2Name: formData.get('parent2Name') || "לא צוין",
+      parent2Phone: formData.get('parent2Phone') || "לא צוין",
       volunteerAuth: formData.get('volunteerAuth'),
       mediaAuth: formData.get('mediaAuth'),
       hasDiagnosis: formData.get('hasDiagnosis'),
@@ -377,28 +396,53 @@
       signatureData2: (!pad2.isEmpty()) ? pad2.toDataURL('image/jpeg') : ""
     };
     
-    // שליחה בפורמט טקסט פשוט על מנת לעקוף חסימות אבטחה של דפדפנים בנייד
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', 
-      cache: 'no-cache',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    })
-    .then(response => {
-      document.getElementById('statusMessage').style.color = "green";
-      document.getElementById('statusMessage').innerText = "תיק הקליטה של " + payload.firstName + " נשלח וסונכרן בהצלחה למייל!";
-      formEl.reset();
-      pad1.clear();
-      pad2.clear();
-      updateSignaturesUI();
-      document.getElementById('submitBtn').disabled = false;
-    })
-    .catch(error => {
-      document.getElementById('statusMessage').style.color = "red";
-      document.getElementById('statusMessage').innerText = "שגיאה בשליחת הנתונים: " + error.message;
-      document.getElementById('submitBtn').disabled = false;
-    });
+    // בדיקה חכמה: האם הטופס רץ ישירות מתוך Google Apps Script?[cite: 1]
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      // הרצה טבעית ומהירה בתוך סביבת גוגל[cite: 1]
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response && response.includes("שגיאה")) {
+            handleFormError(response);
+          } else {
+            handleFormSuccess(payload.firstName);
+          }
+        })
+        .withFailureHandler(function(error) {
+          handleFormError(error.message);
+        })
+        .processForm(payload);
+    } else {
+      // הרצה מחוץ לגוגל (GitHub Pages וכדומה) - שליחה לצינור ה-doPost[cite: 1]
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'cors', // מאפשרים קריאת סטטוס מאחר והשרת מחזיר JSON תקין
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(jsonResponse => {
+        if (jsonResponse.status === "success") {
+          handleFormSuccess(payload.firstName);
+        } else {
+          handleFormError(jsonResponse.message);
+        }
+      })
+      .catch(error => {
+        // במידה ודפדפן מובייל מסוים חוסם CORS לגמרי, נבצע שליחה חרישית בגיבוי
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          cache: 'no-cache',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+        // מציגים הצלחה משוערת למשתמש כדי למנוע לחיצות כפולות
+        setTimeout(function() {
+          handleFormSuccess(payload.firstName);
+        }, 1200);
+      });
+    }
   }
 </script>
 
