@@ -2,273 +2,61 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס קליטה וחוזה ראשוני - קידום נוער נוף הגליל</title>
+    <title>טופס קליטה - נוף הגליל</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #2ecc71;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-        h2 { color: #2c3e50; margin: 0; }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="email"], input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .signature-container {
-            border: 1px dashed #7f8c8d;
-            background: #fafafa;
-            position: relative;
-            margin-top: 10px;
-            border-radius: 4px;
-        }
-        canvas {
-            width: 100%;
-            height: 150px;
-            display: block;
-            cursor: crosshair;
-        }
-        .clear-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 3px;
-            margin: 5px;
-        }
-        .submit-btn {
-            background: #2ecc71;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 20px;
-            transition: background 0.2s;
-        }
-        .submit-btn:hover { background: #27ae60; }
-        #statusMessage {
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-        }
+        body { font-family: Arial; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 600px; background: #fff; margin: auto; padding: 20px; border-radius: 8px; }
+        canvas { border: 1px solid #ccc; width: 100%; height: 150px; }
+        button { width: 100%; padding: 10px; background: #2ecc71; color: white; border: none; margin-top: 10px; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <div class="header">
-        <h2>עיריית נוף הגליל</h2>
-        <p>היחידה לקידום נוער - טופס קליטה וחוזה ראשוני</p>
-    </div>
-
     <form id="mainForm">
-        <div class="form-group">
-            <label>שם מלא של הנער/ה:</label>
-            <input type="text" id="studentName" required>
-        </div>
-
-        <div class="form-group">
-            <label>תעודת זהות נער/ה:</label>
-            <input type="text" id="studentId" required>
-        </div>
-
-        <div class="form-group">
-            <label>טלפון הורה:</label>
-            <input type="text" id="parentPhone" required>
-        </div>
-
-        <div class="form-group">
-            <label>אימייל הורה:</label>
-            <input type="email" id="parentEmail" required>
-        </div>
-
-        <div class="form-group">
-            <label>כתובת מגורים:</label>
-            <input type="text" id="address" required>
-        </div>
-
-        <div class="form-group">
-            <label>תאריך:</label>
-            <input type="date" id="formDate" required>
-        </div>
-
-        <div class="form-group">
-            <label>חתימת הנער/ה:</label>
-            <div class="signature-container">
-                <canvas id="studentCanvas"></canvas>
-                <button type="button" class="clear-btn" onclick="clearCanvas('studentCanvas')">נקה חתימה</button>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>חתימת ההורה:</label>
-            <div class="signature-container">
-                <canvas id="parentCanvas"></canvas>
-                <button type="button" class="clear-btn" onclick="clearCanvas('parentCanvas')">נקה חתימה</button>
-            </div>
-        </div>
-
-        <button type="submit" class="submit-btn" id="submitBtn">שלח טופס חתום</button>
+        <input type="text" id="studentName" placeholder="שם מלא" required><br><br>
+        <input type="text" id="studentId" placeholder="תעודת זהות" required><br><br>
+        <input type="text" id="parentPhone" placeholder="טלפון הורה" required><br><br>
+        <input type="email" id="parentEmail" placeholder="אימייל הורה" required><br><br>
+        <input type="text" id="address" placeholder="כתובת" required><br><br>
+        <input type="date" id="formDate" required><br><br>
+        <label>חתימת נער:</label>
+        <canvas id="studentCanvas"></canvas>
+        <label>חתימת הורה:</label>
+        <canvas id="parentCanvas"></canvas>
+        <button type="submit" id="submitBtn">שלח</button>
     </form>
-
-    <div id="statusMessage"></div>
 </div>
 
 <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/XXXXX/exec";
-
-    function initCanvas(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        
-        ctx.strokeStyle = "#2c3e50";
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-
-        let drawing = false;
-
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
-
-        function startDraw(e) { drawing = true; draw(e); }
-        function endDraw() { drawing = false; ctx.beginPath(); }
-        
-        function draw(e) {
-            if (!drawing) return;
-            e.preventDefault();
-            const pos = getPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mouseup', endDraw);
-        canvas.addEventListener('mousemove', draw);
-
-        canvas.addEventListener('touchstart', startDraw);
-        canvas.addEventListener('touchend', endDraw);
-        canvas.addEventListener('touchmove', draw);
+    
+    // אתחול קאנבס פשוט
+    function setupCanvas(id) {
+        const c = document.getElementById(id);
+        const ctx = c.getContext('2d');
+        c.addEventListener('mousemove', e => { if(e.buttons === 1) ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
+        c.addEventListener('mousedown', e => ctx.moveTo(e.offsetX, e.offsetY));
     }
+    setupCanvas('studentCanvas'); setupCanvas('parentCanvas');
 
-    function clearCanvas(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    window.onload = () => {
-        initCanvas('studentCanvas');
-        initCanvas('parentCanvas');
-        document.getElementById('formDate').valueAsDate = new Date();
-    };
-
-    function isCanvasBlank(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const blank = document.createElement('canvas');
-        blank.width = canvas.width;
-        blank.height = canvas.height;
-        return canvas.toDataURL() === blank.toDataURL();
-    }
-
-    document.getElementById('mainForm').addEventListener('submit', async function(e) {
+    document.getElementById('mainForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const submitBtn = document.getElementById('submitBtn');
-        const statusMsg = document.getElementById('statusMessage');
-        
-        submitBtn.disabled = true;
-        submitBtn.innerText = "שולח נתונים...";
-        statusMsg.style.display = "block";
-        statusMsg.style.backgroundColor = "#ebf5fb";
-        statusMsg.style.color = "#2980b9";
-        statusMsg.innerText = "מבצע שליחה מאובטחת, אנא המתן...";
-
-        const studentSignature = isCanvasBlank('studentCanvas') ? "" : document.getElementById('studentCanvas').toDataURL();
-        const parentSignature = isCanvasBlank('parentCanvas') ? "" : document.getElementById('parentCanvas').toDataURL();
-
-        const formData = {
+        const data = {
             studentName: document.getElementById('studentName').value,
             studentId: document.getElementById('studentId').value,
             parentPhone: document.getElementById('parentPhone').value,
             parentEmail: document.getElementById('parentEmail').value,
             address: document.getElementById('address').value,
             date: document.getElementById('formDate').value,
-            studentSignature: studentSignature,
-            parentSignature: parentSignature
+            studentSignature: document.getElementById('studentCanvas').toDataURL(),
+            parentSignature: document.getElementById('parentCanvas').toDataURL()
         };
-
+        
         try {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            });
-
-            const result = await response.json();
-
-            if (result.status === "success") {
-                statusMsg.style.backgroundColor = "#d4edda";
-                statusMsg.style.color = "#155724";
-                statusMsg.innerText = "הטופס נקלט בהצלחה במערכת!";
-                submitBtn.innerText = "נשלח בהצלחה";
-            } else {
-                throw new Error(result.message || "שגיאה פנימית בשרת");
-            }
-            
-        } catch (error) {
-            console.error(error);
-            statusMsg.style.backgroundColor = "#f8d7da";
-            statusMsg.style.color = "#721c24";
-            statusMsg.innerText = "אירעה שגיאה בתקשורת: " + error.message;
-            submitBtn.disabled = false;
-            submitBtn.innerText = "שלח טופס חתום";
-        }
+            const res = await fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify(data) });
+            alert("נשלח בהצלחה!");
+        } catch(err) { alert("שגיאה בשליחה"); }
     });
 </script>
-
 </body>
 </html>
