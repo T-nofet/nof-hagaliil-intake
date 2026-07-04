@@ -207,11 +207,9 @@
           <label>כתובת תעודת זהות (מרשם):</label>
           <input type="text" id="addressRegister" required>
         </div>
-        <div class="grid-2" style="gap: 0;">
-          <div class="form-group" style="width: 100%;">
-            <label>כתובת מגורים בפועל:</label>
-            <input type="text" id="addressActual" required>
-          </div>
+        <div class="form-group">
+          <label>כתובת מגורים בפועל:</label>
+          <input type="text" id="addressActual" required>
         </div>
       </div>
 
@@ -399,7 +397,7 @@
       return !buffer.some(color => color !== 0);
     }
 
-    // הקישור המעודכן והסופי שלך שהפקת מגוגל:
+    // הקישור המעודכן והסופי שלך מגוגל מוטמע כאן בהצלחה:
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzv5bPDUCTunK1iAu6wP5Ir1tBE2WDGBthxi2MQIyNihFBpiJmcu7e8-MSmv-hKUehD/exec";
 
     document.getElementById('intakeForm').addEventListener('submit', function(e) {
