@@ -36,34 +36,12 @@
       padding-bottom: 15px;
     }
 
-    .header h1 {
-      margin: 0;
-      color: var(--primary-color);
-      font-size: 28px;
-    }
+    .header h1 { margin: 0; color: var(--primary-color); font-size: 28px; }
+    .header h3 { margin: 5px 0; color: #4a5568; font-size: 16px; }
+    .header h2 { margin: 10px 0 0 0; color: var(--secondary-color); font-size: 18px; }
 
-    .header h3 {
-      margin: 5px 0;
-      color: #4a5568;
-      font-size: 16px;
-    }
-
-    .header h2 {
-      margin: 10px 0 0 0;
-      color: var(--secondary-color);
-      font-size: 18px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #2d3748;
-    }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; }
 
     input[type="text"], input[type="tel"], input[type="date"], select {
       width: 100%;
@@ -74,11 +52,7 @@
       font-size: 14px;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
     .section-title {
       font-weight: bold;
@@ -103,12 +77,6 @@
       border-radius: 4px;
     }
 
-    .contract-bullet {
-      margin-bottom: 8px;
-      padding-right: 15px;
-      font-size: 14px;
-    }
-
     .signature-area {
       border: 2px dashed #a0aec0;
       background: #fff;
@@ -118,48 +86,37 @@
       touch-action: none;
     }
 
-    .btn-container {
-      margin-top: 30px;
-      text-align: center;
-    }
+    .btn-container { margin-top: 30px; text-align: center; }
 
     button {
-      background-color: #e53e3e;
+      background-color: #2b6cb0;
       color: white;
       border: none;
-      padding: 12px 40px;
+      padding: 15px 40px;
       font-size: 16px;
       font-weight: bold;
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s;
+      width: 100%;
     }
 
-    button:hover {
-      background-color: #c53030;
-    }
+    button:hover { background-color: #1a365d; }
 
     .clear-btn {
       background-color: #718096;
       padding: 6px 15px;
       font-size: 12px;
       margin-top: 5px;
+      width: auto;
     }
 
-    .clear-btn:hover {
-      background-color: #4a5568;
-    }
+    .clear-btn:hover { background-color: #4a5568; }
 
     @media (max-width: 600px) {
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-      body {
-        padding: 10px;
-      }
-      .container {
-        padding: 15px;
-      }
+      .grid-2 { grid-template-columns: 1fr; }
+      body { padding: 10px; }
+      .container { padding: 15px; }
     }
   </style>
 </head>
@@ -201,7 +158,7 @@
         <div class="form-group">
           <label>מין:</label>
           <select id="gender" required>
-            <option value="">בחר/י</option>
+            <option value="">בחר/י...</option>
             <option value="זכר">זכר</option>
             <option value="נקבה">נקבה</option>
           </select>
@@ -270,7 +227,7 @@
       <div class="section-title">2. פרטי הורים / אפוטרופוס</div>
       <div class="grid-2">
         <div class="form-group">
-          <label>שם מלא - הורה 1 / אפוטרופוס (ממלא הטופס):</label>
+          <label>שם מלא - הורה 1 / אפוטרופוס:</label>
           <input type="text" id="parent1Name" required>
         </div>
         <div class="form-group">
@@ -281,7 +238,7 @@
 
       <div class="grid-2">
         <div class="form-group">
-          <label>שם מלא - הורה 2 / אפוטרופוס (אופציונלי):</label>
+          <label>שם מלא - הורה 2 (אופציונלי):</label>
           <input type="text" id="parent2Name">
         </div>
         <div class="form-group">
@@ -348,7 +305,7 @@
       </div>
 
       <div class="form-group">
-        <label>שם וטלפון של איש קשר לפניה בשעת מצוקה בגין המצב הבריאותי:</label>
+        <label>שם וטלפון של איש קשר לפניה בשעת מצוקה:</label>
         <input type="text" id="emergencyContact" required placeholder="שם מלא + טלפון ישיר">
       </div>
 
@@ -356,6 +313,7 @@
       <div class="form-group">
         <label>א. אישור יציאה מרוכזת להתנדבויות ופעילות חוץ:</label>
         <select id="volunteerAuth" required>
+          <option value="">בחר/י...</option>
           <option value="מאשר/ת">מאשר/ת</option>
           <option value="לא מאשר/ת">לא מאשר/ת</option>
         </select>
@@ -365,66 +323,39 @@
       <div class="form-group">
         <label>ב. אישור לפרסום תמונות ומדיה באינטרנט:</label>
         <select id="mediaAuth" required>
-          <option value="מאשר/ת">מאשר/ת</option>
-          <option value="לא מאשר/ת">לא מאשר/ת</option>
+          <option value="">בחר/י...</option>
+          <option value="מאשר/ת לפרסם">מאשר/ת לפרסם</option>
+          <option value="מסרב/ת לפרסם">מסרב/ת לפרסם</option>
         </select>
         <div class="legal-text">"הריני לאשר את הסכמתי לפרסום תמונות או סרטונים קבוצתיים של בני/בתי באתרי האינטרנט ובכל חומר פרסומי ותקשורתי רשמי מטעם היחידה לקידום נוער. ידוע לי כי המידע יהיה חשוף לכלל הגולשים."</div>
       </div>
 
       <div class="section-title">5. חוזה קליטה ראשוני ותיאום ציפיות הדדי</div>
-      <div class="legal-text" style="background: #fff; border: 1px solid var(--secondary-color);">
-        <strong>מטרות היחידה לקידום נוער:</strong><br>
-        1. להיות כתובת לתמיכה, סיוע, הכוון וייעוץ להשתלבות מחדש בחברה ובקבוצת השווים.<br>
-        2. לסייע ברכישת השכלה מתאימה במסגרת ובמסלול הלימוד המתאימים, ולסייע במיצוי הפוטנציאל ההשכלתי האישי.<br>
-        3. ליצור אפשרויות והזדמנויות חדשות למיצוי הפוטנציאל האישי בתחומי מצוינות ועניין אישיים, במגוון תחומי החיים.<br><br>
-
-        <strong>היחידה לקידום נוער מתחייבת:</strong><br>
-        1. להציע את הטיפול המקצועי והחינוכי המתאים ביותר לנער/ה.<br>
-        2. לכבד את הצרכים הייחודיים והאישיים של כל נער/ה במסגרת.<br>
-        3. לשמור על סודיות מקצועית מלאה בהתאם לכללים המחייבים.<br>
-        4. להיות בקשר שוטף ורציף עם הורי הנער/ה לפי הצורך החינוכי והטיפולי.<br><br>
-
-        <strong>לשם כך, על הנער/ה:</strong><br>
-        1. להשתתף, להתמיד ולהגיע באופן סדיר לתוכנית הלימודים והמפגשים שתיקבע עבורו.<br>
-        2. לשמור על קשר אישי, רציף ויציב עם עובד/ת קידום הנוער המלווה אותו.<br>
-        3. להימנע לחלוטין מאלימות פיזית או מילולית כלפי אנשים ורכוש בתחומי היחידה ובמהלך הפעילויות.<br><br>
-
-        <strong>ההורים מצופים:</strong><br>
-        1. למעורבות פעילה, תמיכה ושיתוף פעולה מלא עם צוות היחידה לקידום נוער כדי להגדיל את סיכויי ההצלחה של הנער/ה במסלול.
-      </div>
-
       <div class="legal-text">
-        אני נותן/ת בזאת את הסכמתי המלאה לקליטת בני/בתי ביחידה לקידום נוער נוף הגליל. הריני מצהיר/ה על הסכמתי לוותר על סודיות המידע ומאשר/ת בזאת העברת חומר רלוונטי על בני/בתי לגורמי טיפול מוסמכים ברשות, בתי ספר או כל מסגרת חינוכית משלימה רלוונטית לפי הצורך החינוכי והטיפולי המקצועי.
-      </div>
-
-      <div class="legal-text">
-        החתימה על מסמך זה מהווה אישור מוסכם על הבנת אופי מסגרת קידום הנוער ברשות. המסגרת מחייבת הגעה סדירה ורציפה למפגשים הפדגוגיים והטיפוליים, שמירה על כללי התנהגות מוסדרים ונאותים, שיתוף פעולה מלא ויציב עם הצוות החינוכי המלווה והשתלבות מלאה במסלולי הלמידה, הבחינות וההתנדבות השונים מטעם הרשות העירונית.
+        אני נותן/ת בזאת את הסכמתי המלאה לקליטת בני/בתי ביחידה לקידום נוער נוף הגליל. הריני מצהיר/ה על הסכמתי לוותר על סודיות המידע ומאשר/ת בזאת העברת חומר רלוונטי לגורמי טיפול מוסמכים ברשות לפי הצורך החינוכי והטיפולי המקצועי.
       </div>
 
       <div class="grid-2">
         <div class="form-group">
-          <label>חתימת הורה 1 (אנא מלא שם למעלה):</label>
+          <label>חתימת הורה 1 (חובה):</label>
           <canvas id="sigCanvas1" class="signature-area" width="350" height="150"></canvas>
-          <br>
           <button type="button" class="clear-btn" id="clearSig1">נקה חתימה 1</button>
         </div>
         
         <div class="form-group">
           <label>חתימת הורה 2 (אופציונלי):</label>
           <canvas id="sigCanvas2" class="signature-area" width="350" height="150"></canvas>
-          <br>
           <button type="button" class="clear-btn" id="clearSig2">נקה חתימה 2</button>
         </div>
       </div>
 
       <div class="btn-container">
-        <button type="submit" id="submitBtn">נקה חתימה ושלח תיק קליטה רשמי ומלא</button>
+        <button type="submit" id="submitBtn">שלח תיק קליטה רשמי ומלא</button>
       </div>
     </form>
   </div>
 
   <script>
-    // הגדרת מערכת חתימות אלקטרוניות קנבס
     function initSignaturePad(canvasId, clearBtnId) {
       const canvas = document.getElementById(canvasId);
       const ctx = canvas.getContext('2d');
@@ -441,42 +372,24 @@
         return { x: clientX - rect.left, y: clientY - rect.top };
       }
 
-      function startDraw(e) {
-        isDrawing = true;
-        const pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        e.preventDefault();
-      }
-
-      function draw(e) {
-        if (!isDrawing) return;
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-        e.preventDefault();
-      }
-
+      function startDraw(e) { isDrawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
+      function draw(e) { if (!isDrawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); e.preventDefault(); }
       function stopDraw() { isDrawing = false; }
 
       canvas.addEventListener('mousedown', startDraw);
       canvas.addEventListener('mousemove', draw);
       canvas.addEventListener('mouseup', stopDraw);
       canvas.addEventListener('mouseleave', stopDraw);
-
       canvas.addEventListener('touchstart', startDraw);
       canvas.addEventListener('touchmove', draw);
       canvas.addEventListener('touchend', stopDraw);
 
-      document.getElementById(clearBtnId).addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      });
+      document.getElementById(clearBtnId).addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
     }
 
     initSignaturePad('sigCanvas1', 'clearSig1');
     initSignaturePad('sigCanvas2', 'clearSig2');
 
-    // פונקציה לבדיקה אם הקנבס ריק
     function isCanvasEmpty(canvasId) {
       const canvas = document.getElementById(canvasId);
       const ctx = canvas.getContext('2d');
@@ -484,8 +397,7 @@
       return !buffer.some(color => color !== 0);
     }
 
-    // צינור החיבור ושליחת הנתונים ל-Google Apps Script
-    // החלף את הלינק למטה ב-Web App URL העדכני שלך מגוגל!
+    // הלינק המרכזי של ה-Web App שלך מגוגל! לקשר כאן:
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID/exec";
 
     document.getElementById('intakeForm').addEventListener('submit', function(e) {
@@ -539,7 +451,7 @@
 
       fetch(WEB_APP_URL, {
         method: 'POST',
-        mode: 'no-cors', // מאפשר לעקוף מגבלות CORS מול שרתי גוגל
+        mode: 'no-cors',
         cache: 'no-cache',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -555,7 +467,7 @@
       })
       .finally(() => {
         submitBtn.disabled = false;
-        submitBtn.innerText = "נקה חתימה ושלח תיק קליטה רשמי ומלא";
+        submitBtn.innerText = "שלח תיק קליטה רשמי ומלא";
       });
     });
   </script>
