@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f7f6;
             margin: 0;
-            padding: 20;
+            padding: 20px;
             color: #333;
         }
         .container {
@@ -114,7 +114,7 @@
         </div>
 
         <div class="form-group">
-            <label>אימייל למשלוח עותק (הורה/נער):</label>
+            <label>אימייל הורה:</label>
             <input type="email" id="parentEmail" required>
         </div>
 
@@ -151,15 +151,12 @@
 </div>
 
 <script>
-    // הגדרת כתובת ה-Web App של גוגל סקריפט שלך (החלף בכתובת שקיבלת מה-Deploy)
     const WEB_APP_URL = "https://script.google.com/macros/s/XXXXX/exec";
 
-    // אתחול משטחי החתימה
     function initCanvas(canvasId) {
         const canvas = document.getElementById(canvasId);
         const ctx = canvas.getContext('2d');
         
-        // התאמת רזולוציה לגודל האלמנט
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
         
@@ -204,14 +201,20 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // הפעלת האתחול לאחר טעינת הדף
     window.onload = () => {
         initCanvas('studentCanvas');
         initCanvas('parentCanvas');
         document.getElementById('formDate').valueAsDate = new Date();
     };
 
-    // טיפול בשליחת הטופס עם המעקף המלא ל-CORS וגוגל
+    function isCanvasBlank(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const blank = document.createElement('canvas');
+        blank.width = canvas.width;
+        blank.height = canvas.height;
+        return canvas.toDataURL() === blank.toDataURL();
+    }
+
     document.getElementById('mainForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -219,17 +222,15 @@
         const statusMsg = document.getElementById('statusMessage');
         
         submitBtn.disabled = true;
-        submitBtn.innerText = "שולח נתונים ומייצר מייל...";
+        submitBtn.innerText = "שולח נתונים...";
         statusMsg.style.display = "block";
         statusMsg.style.backgroundColor = "#ebf5fb";
         statusMsg.style.color = "#2980b9";
         statusMsg.innerText = "מבצע שליחה מאובטחת, אנא המתן...";
 
-        // המרת החתימות לתמונות Base64
-        const studentSignature = document.getElementById('studentCanvas').toDataURL();
-        const parentSignature = document.getElementById('parentCanvas').toDataURL();
+        const studentSignature = isCanvasBlank('studentCanvas') ? "" : document.getElementById('studentCanvas').toDataURL();
+        const parentSignature = isCanvasBlank('parentCanvas') ? "" : document.getElementById('parentCanvas').toDataURL();
 
-        // ריכוז הנתונים ל-JSON
         const formData = {
             studentName: document.getElementById('studentName').value,
             studentId: document.getElementById('studentId').value,
@@ -241,26 +242,28 @@
             parentSignature: parentSignature
         };
 
-        // מעקף ה-CORS האולטימטיבי: שליחה במוד core/no-cors משולב
         try {
-            await fetch(WEB_APP_URL, {
+            const response = await fetch(WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', // מבטל חסימות דפדפנים מול גוגל סקריפט ב-GitHub
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            // בגלל 'no-cors' התשובה חוזרת אטומה, אבל השליחה לגוגל מתבצעת בהצלחה מלאה!
-            statusMsg.style.backgroundColor = "#d4edda";
-            statusMsg.style.color = "#155724";
-            statusMsg.innerText = "הטופס נשלח בהצלחה! עותק חתום נשלח לכתובת המייל.";
-            submitBtn.innerText = "נשלח בהצלחה";
+            const result = await response.json();
+
+            if (result.status === "success") {
+                statusMsg.style.backgroundColor = "#d4edda";
+                statusMsg.style.color = "#155724";
+                statusMsg.innerText = "הטופס נקלט בהצלחה במערכת!";
+                submitBtn.innerText = "נשלח בהצלחה";
+            } else {
+                throw new Error(result.message || "שגיאה פנימית בשרת");
+            }
             
-        </div> catch (error) {
+        } catch (error) {
             console.error(error);
             statusMsg.style.backgroundColor = "#f8d7da";
             statusMsg.style.color = "#721c24";
-            statusMsg.innerText = "אירעה שגיאה בתקשורת עם השרת. אנא נסה שוב.";
+            statusMsg.innerText = "אירעה שגיאה בתקשורת: " + error.message;
             submitBtn.disabled = false;
             submitBtn.innerText = "שלח טופס חתום";
         }
